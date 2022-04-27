@@ -9,7 +9,7 @@ from nltk.corpus import stopwords  # module for stop words that come with NLTK
 from nltk.stem import PorterStemmer  # module for stemming
 from nltk.tokenize import TweetTokenizer  # module for tokenizing strings
 
-from twitter_sentiment_analysis import process_tweet
+from twitter_sentiment_analysis.utils import process_tweet
 
 # download sample twitter dataset
 

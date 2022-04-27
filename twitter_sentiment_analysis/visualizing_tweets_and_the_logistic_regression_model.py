@@ -19,7 +19,20 @@ train_neg = all_negative_tweets[:4000]
 
 train_x = train_pos + train_neg
 print("Number of tweets: ", len(train_x))
+train_y = np.append(np.ones(len(train_pos)), np.zeros(len(train_neg)))
 
-data = pd.read_csv('./data/logistic_features.csv')
+freqs = build_freqs(train_x, train_y)
+# data = pd.read_csv('./data/logistic_features.csv')
+
+tweet_pos_neg_cnt = []
+for idx, tweet in enumerate(train_x):
+    # cleaned tweet, stopwords removed, words stemmed
+    pos_cnt = 0
+    neg_cnt = 0
+    for word in process_tweet(tweet):
+        pos_cnt += freqs.get((word, 1), 0)
+        neg_cnt += freqs.get((word, 0), 0)
+    tweet_pos_neg_cnt.append([idx, pos_cnt, neg_cnt])
+
 
 print('just for debugging')
