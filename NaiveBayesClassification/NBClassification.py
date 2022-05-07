@@ -1,8 +1,8 @@
 import pandas as pd
 from nltk.corpus import twitter_samples
 import numpy as np
-
-from NaiveBayesClassification.utils import process_tweet, build_freqs
+from sklearn.metrics import accuracy_score, precision_score, recall_score
+from NaiveBayesClassification.utils import process_tweet, build_freqs, get_naive_bayes_score
 
 pos_tweets = twitter_samples.strings('positive_tweets.json')
 neg_tweets = twitter_samples.strings('negative_tweets.json')
@@ -48,6 +48,19 @@ df_cond_prob = df_word_freq.drop(labels=['pos_count', 'neg_count'], axis=1)
 
 # creating a lookup dictionary that has a pos(+) and neg(-) conditional probability of each unique word in vocabulary,
 dict_cond_prob = df_cond_prob.set_index('word').to_dict('index')
+
+# Naive Bayes classification
+lst_ = get_naive_bayes_score(test_x, dict_cond_prob, len(pos_tweets[:4000]), len(neg_tweets[:4000]))
+
+acc_ = accuracy_score(test_y, lst_)
+precision_ = precision_score(test_y, lst_)
+recall_ = recall_score(test_y, lst_)
+
+print(f'the accuracy is: {acc_}, the precision is: {precision_}, the recall is: {recall_}')
+
+
+
+
 
 
 
