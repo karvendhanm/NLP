@@ -55,7 +55,7 @@ def build_freqs(tweets, labels):
     for tweet, label in zip(tweets, labels):
         for word in process_tweet(tweet):
             pair = (word, label)
-            freq_dict[pair] = freq_dict.get(pair, 0) + 1
+            freq_dict[pair] = freq_dict.get(pair, 0) + 1.0
 
     return freq_dict
 
