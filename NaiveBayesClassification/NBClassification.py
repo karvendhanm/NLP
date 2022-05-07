@@ -28,6 +28,28 @@ for word in vocabulary:
     df_temp = pd.DataFrame(arr_, columns=cols)
     df_word_freq = pd.concat([df_word_freq, df_temp], axis=0)
 
+df_word_freq['pos_count'] = df_word_freq['pos_count'].astype('float')
+df_word_freq['neg_count'] = df_word_freq['neg_count'].astype('float')
+
+# The number of unique words in the vocabulary should be equal to the number of rows in the dataframe 'df_word_freq'.
+assert len(vocabulary) == len(df_word_freq), 'issue with the number of unique words in vocabulary'
+
+# Creating conditional probability of each unique word in the vocabulary given that the word has occurred in
+# positive tweet or in negative tweet.
+nPosWords = sum(df_word_freq['pos_count'])
+nNegWords = sum(df_word_freq['neg_count'])
+nUniqueWords = len(df_word_freq)
+
+df_word_freq['pos_conditional_prob'] = df_word_freq.apply(lambda x:
+                                                          (x['pos_count'] + 1)/(nPosWords + nUniqueWords), axis=1)
+df_word_freq['neg_conditional_prob'] = df_word_freq.apply(lambda x:
+                                                          (x['neg_count'] + 1)/(nNegWords + nUniqueWords), axis=1)
+df_cond_prob = df_word_freq.drop(labels=['pos_count', 'neg_count'], axis=1)
+
+# creating a lookup dictionary that has a pos(+) and neg(-) conditional probability of each unique word in vocabulary,
+dict_cond_prob = df_cond_prob.set_index('word').to_dict('index')
+
+
 
 
 
