@@ -2,7 +2,7 @@ import pandas as pd
 from nltk.corpus import twitter_samples
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score
-from NaiveBayesClassification.utils import process_tweet, build_freqs, get_naive_bayes_score
+from NaiveBayesClassification.utils import build_freqs, get_naive_bayes_score
 
 pos_tweets = twitter_samples.strings('positive_tweets.json')
 neg_tweets = twitter_samples.strings('negative_tweets.json')
@@ -57,6 +57,8 @@ precision_ = precision_score(test_y, lst_)
 recall_ = recall_score(test_y, lst_)
 
 print(f'the accuracy is: {acc_}, the precision is: {precision_}, the recall is: {recall_}')
+
+
 
 
 
