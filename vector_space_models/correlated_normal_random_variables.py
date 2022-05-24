@@ -41,5 +41,33 @@ row_after_rotation = pearsonr(data.x, data.y)
 plt.scatter(data.x, data.y)
 plt.show()
 
+# Let us print the original and the resulting transformed system using the result of the PCA in the same plot
+# alongside with the 2 Principal Component vectors in red and blue
+
+plt.scatter(data.x, data.y)
+
+# Apply PCA. In theory, Eigen matrix must be the inverse of the original rotation matrix.
+pca = PCA(n_components=2)
+
+# Create the transformational model for this data. Internally it gets the
+# rotational matrix and the explained variance.
+pcaTr = pca.fit(data)
+
+# rotational matrix or eigen vectors
+pcaTr.components_
+
+# explained variance or eigen values
+pcaTr.explained_variance_
+
+dataPCA = pcaTr.transform(data)
+dataPCA = pd.DataFrame(dataPCA, columns = ['x', 'y'])
+
+plt.scatter(dataPCA.x, dataPCA.y)
+
+plt.plot([0, rotationMatrix[0][0] * std1 * 3], [0, rotationMatrix[0][1] * std1 * 3], 'k-', color='red')
+plt.plot([0, rotationMatrix[1][0] * std2 * 3], [0, rotationMatrix[1][1] * std2 * 3],  'k-', color='green')
+
+plt.show()
+
 
 
