@@ -66,7 +66,6 @@ plt.scatter(dataPCA.x, dataPCA.y)
 
 plt.plot([0, rotationMatrix[0][0] * std1 * 3], [0, rotationMatrix[0][1] * std1 * 3], 'k-', color='red')
 plt.plot([0, rotationMatrix[1][0] * std2 * 3], [0, rotationMatrix[1][1] * std2 * 3],  'k-', color='green')
-
 plt.show()
 
 
