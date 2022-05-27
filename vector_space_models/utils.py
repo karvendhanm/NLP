@@ -79,18 +79,21 @@ def get_country(city1, country1, city2, embeddings, cosine_similarity=cosine_sim
     return country
 
 def compute_pca(X, n_components=2):
-    '''
+    """
+    Input:
+        X: of dimension (m,n) where each row corresponds to a word vector
+        n_components: Number of components you want to keep.
+    Output:
+        X_reduced: data transformed in 2 dims/columns + regenerated original data
+    pass in: data as 2D NumPy array
+    """
 
-    :param X:
-    :param n_components:
-    :return:
-    '''
-
+    ### START CODE HERE ###
     # mean center the data
-    X_demeaned = X - np.mean(X, axis=1).reshape(-1, 1)
+    X_demeaned = X - np.mean(X, axis=0).reshape(1, -1)
 
     # calculate the covariance matrix
-    covariance_matrix = np.cov(X_demeaned)
+    covariance_matrix = np.cov(X_demeaned.T)
 
     # calculate eigenvectors & eigenvalues of the covariance matrix
     eigen_vals, eigen_vecs = np.linalg.eigh(covariance_matrix)
@@ -104,7 +107,22 @@ def compute_pca(X, n_components=2):
     # sort the eigen values by idx_sorted_decreasing
     eigen_vals_sorted = eigen_vals[idx_sorted_decreasing]
 
-    print('just for debugging')
+    # sort eigenvectors using the idx_sorted_decreasing indices
+    eigen_vecs_sorted = eigen_vecs[:, idx_sorted_decreasing]
+
+    # select the first n eigenvectors (n is desired dimension
+    # of rescaled data array, or dims_rescaled_data)
+    eigen_vecs_subset = eigen_vecs_sorted[:, :n_components]
+
+    # transform the data by multiplying the transpose of the eigenvectors with the transpose of the de-meaned data
+    # Then take the transpose of that product.
+    X_reduced = np.dot(X_demeaned, eigen_vecs_subset)
+
+    ### END CODE HERE ###
+
+    return X_reduced
+
+
 
 
 
