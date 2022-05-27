@@ -78,6 +78,37 @@ def get_country(city1, country1, city2, embeddings, cosine_similarity=cosine_sim
     country = get_closest_vector(embeddings, country2_vec_pred, city1, country1, city2)
     return country
 
+def compute_pca(X, n_components=2):
+    '''
+
+    :param X:
+    :param n_components:
+    :return:
+    '''
+
+    # mean center the data
+    X_demeaned = X - np.mean(X, axis=1).reshape(-1, 1)
+
+    # calculate the covariance matrix
+    covariance_matrix = np.cov(X_demeaned)
+
+    # calculate eigenvectors & eigenvalues of the covariance matrix
+    eigen_vals, eigen_vecs = np.linalg.eigh(covariance_matrix)
+
+    # sort eigenvalue in increasing order (get the indices from the sort)
+    idx_sorted = np.argsort(eigen_vals)
+
+    # reverse the order so that it's from highest to lowest.
+    idx_sorted_decreasing = idx_sorted[::-1]
+
+    # sort the eigen values by idx_sorted_decreasing
+    eigen_vals_sorted = eigen_vals[idx_sorted_decreasing]
+
+    print('just for debugging')
+
+
+
+
 
 
 
