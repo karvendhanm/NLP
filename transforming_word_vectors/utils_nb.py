@@ -59,7 +59,6 @@ def get_dict(file_name):
 
     return etof
 
-
 def cosine_similarity(A, B):
     '''
     Input:
