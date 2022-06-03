@@ -106,4 +106,120 @@ def plot_vectors(vectors, colors=['k', 'b', 'r', 'm', 'c'], axes=None, fname='im
     
     if ax == None:
         plt.show()
-        fig.savefig(fname)
+        fig.savefig('./data/' + fname)
+
+
+def get_matrices(en_fr, french_vecs, english_vecs):
+    """
+    Input:
+        en_fr: English to French dictionary
+        french_vecs: French words to their corresponding word embeddings.
+        english_vecs: English words to their corresponding word embeddings.
+    Output:
+        X: a matrix where the columns are the English embeddings.
+        Y: a matrix where the columns corresponding to the French embeddings.
+        R: the projection matrix that minimizes the F norm ||X R -Y||^2.
+    """
+
+    X, Y = list(), list()
+    for english_word, french_word in en_fr.items():
+
+        if (english_word in english_vecs) & (french_word in french_vecs):
+
+            french_vector = french_vecs[french_word]
+            english_vector = english_vecs[english_word]
+
+            X.append(english_vector)
+            Y.append(french_vector)
+
+    X = np.array(X).reshape(-1, 300)
+    Y = np.array(Y).reshape(-1, 300)
+
+    return X, Y
+
+
+def compute_loss(X, Y, R):
+    '''
+    Inputs:
+        X: a matrix of dimension (m,n) where the columns are the English embeddings.
+        Y: a matrix of dimension (m,n) where the columns correspong to the French embeddings.
+        R: a matrix of dimension (n,n) - transformation matrix from English to French vector space embeddings.
+    Outputs:
+        L: a matrix of dimension (m,n) - the value of the loss function for given X, Y and R.
+
+    # number of samples
+    '''
+    m = X.shape[0]
+
+    diff = np.dot(X, R) - Y
+
+    # find square of frobenius norm as it is the loss function
+    sum_diff_squared = np.sum(np.square(diff))
+
+    # we need the average loss
+    loss = sum_diff_squared/m
+
+    return loss
+
+
+# Computing the gradient of loss in respect to transform matrix R.
+def compute_gradient(X, Y, R):
+    '''
+    Inputs:
+        X: a matrix of dimension (m,n) where the columns are the English embeddings.
+        Y: a matrix of dimension (m,n) where the columns correspong to the French embeddings.
+        R: a matrix of dimension (n,n) - transformation matrix from English to French vector space embeddings.
+    Outputs:
+        g: a scalar value - gradient of the loss function L for given X, Y and R.
+    '''
+
+    # number of samples
+    m = X.shape[0]
+
+    diff = np.dot(X, R) - Y
+
+    transpose_diff = np.dot(X.T, diff)
+
+    gradient = (2/m) * transpose_diff
+
+    return gradient
+
+
+def align_embeddings(X, Y, train_steps=100, learning_rate=0.0003, verbose=True, compute_loss=compute_loss, compute_gradient=compute_gradient):
+    '''
+    Inputs:
+        X: a matrix of dimension (m,n) where the columns are the English embeddings.
+        Y: a matrix of dimension (m,n) where the columns correspong to the French embeddings.
+        train_steps: positive int - describes how many steps will gradient descent algorithm do.
+        learning_rate: positive float - describes how big steps will  gradient descent algorithm do.
+    Outputs:
+        R: a matrix of dimension (n,n) - the projection matrix that minimizes the F norm ||X R -Y||^2
+    '''
+    np.random.seed(129)
+
+    # the number of columns in X is the number of dimensions for a word vector (e.g. 300)
+    # R is a square matrix with length equal to the number of dimensions in th  word embedding
+    R = np.random.rand(X.shape[1], X.shape[1])
+
+    for i in range(train_steps):
+        if verbose and i % 25 == 0:
+            print(f"loss at iteration {i} is: {compute_loss(X, Y, R):.4f}")
+        # use the function that you defined to compute the gradient
+        gradient = compute_gradient(X, Y, R)
+
+        # update R by subtracting the learning rate times gradient
+        R -= (learning_rate * gradient)
+
+    return R
+
+
+
+
+
+
+
+
+
+
+
+
