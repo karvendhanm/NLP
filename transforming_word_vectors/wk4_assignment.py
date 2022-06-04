@@ -10,7 +10,7 @@ import numpy as np
 from nltk.corpus import stopwords, twitter_samples
 
 from transforming_word_vectors.utils_nb import (get_dict, process_tweet, cosine_similarity, get_matrices, compute_loss)
-from transforming_word_vectors.utils_nb import compute_gradient, align_embeddings
+from transforming_word_vectors.utils_nb import compute_gradient, align_embeddings, nearest_neighbor, test_vocabulary
 from os import getcwd
 en_embeddings_subset = pickle.load(open('./data/Files/en_embeddings.p', 'rb'))
 fr_embeddings_subset = pickle.load(open('./data/Files/fr_embeddings.p', 'rb'))
@@ -51,6 +51,12 @@ print(f"First row of the gradient matrix: {gradient[0]}")
 # Finding the optimal R with gradient descent algorithm.
 R_train = align_embeddings(X_train, Y_train, train_steps=400, learning_rate=0.8)
 
+v = np.array([1, 0, 1])
+candidates = np.array([[1, 0, 5], [-2, 5, 3], [2, 0, 1], [6, -9, 5], [9, 9, 9]])
+nearest_neighbor(v, candidates, 3)
 
-
+X_test, Y_test = get_matrices(en_fr_test, fr_embeddings_subset, en_embeddings_subset)
+# test your translation and compute its accuracy.
+accuracy = test_vocabulary(X_test, Y_test, R_train)
+print(accuracy)
 
