@@ -19,6 +19,26 @@ fh.close()
 WORDS = Counter(words(big_text))
 
 
+def known(_words):
+    '''
+
+    :param words:
+    :return:
+    '''
+    # The subset of 'words' that appear in the dictionary of WORDS.
+    return set(w for w in _words if w in WORDS)
+
+
+def candidates(word):
+    '''
+
+    :param word:
+    :return:
+    '''
+    # Generate possible spelling corrections for a word.
+    return known([word]) or known(edits1(word)) or known(edits2(word)) or [word]
+
+
 def Probability(word, N=sum(WORDS.values())):
     '''
 
@@ -26,7 +46,18 @@ def Probability(word, N=sum(WORDS.values())):
     :param N:
     :return:
     '''
+    # Probability of 'word'
     return WORDS.get(word, 0) / N
+
+
+def correction(word):
+    '''
+
+    :param word:
+    :return:
+    '''
+    # Most probable spelling correction for a word.
+    return max(candidates(word), key=Probability)
 
 
 def edits1(word):
@@ -36,7 +67,7 @@ def edits1(word):
     :return:
     '''
 
-    'All edits that are one edit away from "word"'
+    # All edits that are one edit away from "word"
     letters = 'abcdefghijklmnopqrstuvwxyz'
     splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
     deletes = [L + R[1:] for L, R in splits if R]
@@ -53,8 +84,14 @@ def edits2(word):
     :return:
     '''
 
-    'All edits that are two edits away from "word"'
+    # All edits that are two edits away from "word"
     return set(e2 for e1 in edits1(word) for e2 in edits1(e1))
+
+
+
+
+
+
 
 
 
