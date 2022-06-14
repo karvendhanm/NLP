@@ -45,3 +45,16 @@ def edits1(word):
     inserts = [L + c + R for L, R in splits for c in letters]
     return set(deletes + switches + replaces + inserts)
 
+
+def edits2(word):
+    '''
+
+    :param word:
+    :return:
+    '''
+
+    'All edits that are two edits away from "word"'
+    return set(e2 for e1 in edits1(word) for e2 in edits1(e1))
+
+
+
