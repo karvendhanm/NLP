@@ -88,6 +88,33 @@ def edits2(word):
     return set(e2 for e1 in edits1(word) for e2 in edits1(e1))
 
 
+# unit test
+def unit_tests():
+    assert correction('speling') == 'spelling'              # insert
+    assert correction('korrectud') == 'corrected'           # replace 2
+    assert correction('bycycle') == 'bicycle'               # replace
+    assert correction('inconvient') == 'inconvenient'       # insert 2
+    assert correction('arrainged') == 'arranged'            # delete
+    assert correction('peotry') =='poetry'                  # transpose
+    assert correction('peotryy') =='poetry'                 # transpose + delete
+    assert correction('word') == 'word'                     # known
+    assert correction('quintessential') == 'quintessential' # unknown
+    assert words('This is a TEST') == ['this', 'is', 'a', 'test']
+    assert Counter(words('This is a test. 123; A TEST this is.')) == (
+        Counter({'123': 1, 'a': 2, 'is': 2, 'test': 2, 'this': 2}))
+    return 'unit_tests pass'
+
+
+def testset(lines):
+    "Parse 'right: wrong1 wrong2' lines into [('right', 'wrong1'), ('right', 'wrong2')] pairs."
+
+
+
+
+print(testset(open('./data/spell-testset1.txt', 'r')))
+
+
+
 
 
 
