@@ -1,5 +1,6 @@
-import re
 from collections import Counter
+import re
+import time
 
 
 def words(text):
@@ -90,6 +91,10 @@ def edits2(word):
 
 # unit test
 def unit_tests():
+    '''
+
+    :return:
+    '''
     assert correction('speling') == 'spelling'              # insert
     assert correction('korrectud') == 'corrected'           # replace 2
     assert correction('bycycle') == 'bicycle'               # replace
@@ -105,13 +110,43 @@ def unit_tests():
     return 'unit_tests pass'
 
 
+def spelltest(tests, verbose=False):
+    '''
+
+    :param tests:
+    :param verbose:
+    :return:
+    '''
+    start = time.process_time()
+    good, unknown = 0, 0
+    n = len(tests)
+    for correct, wrong in tests:
+        w = correction(wrong)
+        good += (w == correct)
+        if w != correct:
+            unknown += (correct not in WORDS)
+            if verbose:
+                print('correction({}) => {} ({}); expected {} ({})'
+                      .format(wrong, w, WORDS[w], correct, WORDS[correct]))
+    dt = time.process_time() - start
+    print('{:.0%} of {} correct ({:.0%} unknown) at {:.0f} words per second '
+          .format(good / n, n, unknown / n, n / dt))
+
+
 def testset(lines):
+    '''
+
+    :param lines:
+    :return:
+    '''
     "Parse 'right: wrong1 wrong2' lines into [('right', 'wrong1'), ('right', 'wrong2')] pairs."
+    return [(correct, wrong) for correct, wrongs in (line.split(':') for line in lines) for wrong in wrongs.split()]
 
 
+print(unit_tests())
+spelltest(testset(open('./data/spell-testset1.txt', 'r')))
+spelltest(testset(open('./data/spell-testset2.txt', 'r')))
 
-
-print(testset(open('./data/spell-testset1.txt', 'r')))
 
 
 
