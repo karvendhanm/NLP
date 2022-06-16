@@ -4,3 +4,4 @@ temp.py
 transforming_word_vectors/__pycache__/
 twitter_sentiment_analysis/__pycache__/
 vector_space_models/__pycache__/
+autocorrect/__pycache__/
