@@ -11,6 +11,5 @@ from autocorrect.utils import process_data, get_count
 word_l = process_data('./data/shakespeare.txt')
 word_count_dict = get_count(word_l)
 
-
-
+# String manipulations
 
