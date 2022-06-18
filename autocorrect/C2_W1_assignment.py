@@ -19,4 +19,15 @@ replace_l = replace_letter(word='can', verbose=True)
 insert_l = insert_letter('at', True)
 
 # Combining the edits.
+tmp_word = "at"
+tmp_edit_one_set = edit_one_letter(tmp_word)
+tmp_edit_two_set = edit_two_letters("a")
+
+# Suggest spelling suggestions
+my_word = 'dys'
+tmp_corrections = get_corrections(my_word, probs, vocab, 2, verbose=True)
+
+# Minimum edit distance
+
+
 

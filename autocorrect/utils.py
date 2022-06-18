@@ -124,3 +124,68 @@ def insert_letter(word, verbose=False):
     if verbose: print(f"Input word {word} \nsplit_l = {split_l} \ninsert_l = {insert_l}")
 
     return insert_l
+
+
+# Edit one letter
+def edit_one_letter(word, allow_switches=True):
+    """
+    Input:
+        word: the string/word for which we will generate all possible words that are one edit away.
+    Output:
+        edit_one_set: a set of words with one possible edit. Please return a set. and not a list.
+    """
+    edit_one_set = delete_letter(word) + replace_letter(word) + insert_letter(word)
+
+    if allow_switches:
+        edit_one_set = edit_one_set + switch_letter(word)
+
+    return set(edit_one_set)
+
+
+# Edit two letters
+def edit_two_letters(word, allow_switches=True):
+    '''
+    Input:
+        word: the input string/word
+    Output:
+        edit_two_set: a set of strings with all possible two edits
+    '''
+
+    if allow_switches:
+        edit_two_set = [w2 for w1 in edit_one_letter(word) for w2 in edit_one_letter(w1)]
+    else:
+        edit_two_set = [w2 for w1 in edit_one_letter(word, False) for w2 in edit_one_letter(w1, False)]
+
+    # return this as a set instead of a list
+    return set(edit_two_set)
+
+
+def get_corrections(word, probs, vocab, n=2, verbose=False):
+    '''
+    Input:
+        word: a user entered string to check for suggestions
+        probs: a dictionary that maps each word to its probability in the corpus
+        vocab: a set containing all the vocabulary
+        n: number of possible word corrections you want returned in the dictionary
+    Output:
+        n_best: a list of tuples with the most probable n corrected words and their probabilities.
+    '''
+
+    suggestions = list(
+        set([w for w in vocab if w == word]) or edit_one_letter(word) or edit_two_letters(word) or set(word))
+
+    # Step 2: determine probability of suggestions
+
+    best_words = {}
+    for word in suggestions:
+        best_words[word] = probs.get(word, 0)
+
+    # Step 3: Get all your best words and return the most probable top n_suggested words as n_best
+
+    n_best = list(sorted(best_words.items(), key=lambda item: item[1], reverse=True)[:n])
+
+    if verbose: print("entered word = ", word, "\nsuggestions = ", suggestions)
+
+    return n_best
+
+
