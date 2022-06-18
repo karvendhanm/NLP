@@ -6,10 +6,17 @@
 import numpy as np
 import pandas as pd
 
-from autocorrect.utils import process_data, get_count
+from autocorrect.utils import *
 
 word_l = process_data('./data/shakespeare.txt')
-word_count_dict = get_count(word_l)
+vocab = set(word_l)
 
-# String manipulations
+word_count_dict = get_count(word_l)
+probs = get_probs(word_count_dict)
+delete_word_l = delete_letter(word="cans", verbose=True)
+switch_word_l = switch_letter(word="eta", verbose=True)
+replace_l = replace_letter(word='can', verbose=True)
+insert_l = insert_letter('at', True)
+
+# Combining the edits.
 
