@@ -1,4 +1,5 @@
 from collections import Counter
+import numpy as np
 import re
 
 def process_data(file_name):
@@ -189,3 +190,48 @@ def get_corrections(word, probs, vocab, n=2, verbose=False):
     return n_best
 
 
+def min_edit_distance(source, target, ins_cost=1, del_cost=1, rep_cost=2):
+    '''
+    Input:
+        source: a string corresponding to the string you are starting with
+        target: a string corresponding to the string you want to end with
+        ins_cost: an integer setting the insert cost
+        del_cost: an integer setting the delete cost
+        rep_cost: an integer setting the replace cost
+    Output:
+        D: a matrix of len(source)+1 by len(target)+1 containing minimum edit distances
+        med: the minimum edit distance (med) required to convert the source string to the target
+    '''
+    m = len(source)
+    n = len(target)
+    # initialize cost matrix with zeros and dimensions (m+1,n+1)
+    D = np.zeros((m + 1, n + 1), dtype=int)
+
+
+    # Fill in column 0, from row 1 to row m, both inclusive
+    for row in range(0, m + 1):  # Replace None with the proper range
+        D[row, 0] = row * del_cost
+
+    # Fill in row 0, for all columns from 1 to n, both inclusive
+    for col in range(0, n + 1):  # Replace None with the proper range
+        D[0, col] = col * ins_cost
+
+    # Loop through row 1 to row m, both inclusive
+    for row in range(1, m + 1):
+
+        # Loop through column 1 to column n, both inclusive
+        for col in range(1, n + 1):
+
+            # Intialize r_cost to the 'replace' cost that is passed into this function
+            r_cost = rep_cost
+
+            # matches the target character at the previous column,
+            if source[row - 1] == target[col - 1]:  # Replace None with a proper comparison
+                r_cost = 0
+
+            D[row, col] = min(D[row - 1, col] + ins_cost, D[row, col - 1] + del_cost, D[row - 1, col - 1] + r_cost)
+
+    # Set the minimum edit distance with the cost found at row m, column n
+    med = D[m, n]
+
+    return D, med

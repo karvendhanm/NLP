@@ -28,6 +28,6 @@ my_word = 'dys'
 tmp_corrections = get_corrections(my_word, probs, vocab, 2, verbose=True)
 
 # Minimum edit distance
-
+min_edit_distance('eer', 'near')
 
 
