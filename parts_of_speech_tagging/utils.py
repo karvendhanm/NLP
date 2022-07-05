@@ -59,5 +59,42 @@ def get_word_tag(line, vocab):
     return word, tag
 
 
+def preprocess(vocab, data_fp):
+    '''
+    preprocess data
+    :param vocab:
+    :param data_fp:
+    :return:
+    '''
+
+    orig = []
+    prep = []
+
+    # Read data
+    with open(data_fp, 'r') as data_file:
+
+        for cnt, word in enumerate(data_file):
+
+            orig.append(word.strip())
+            # End of sentence
+            if not word.split():
+                prep.append("--n--")
+                continue
+
+            # Handle unknown words
+            elif word.strip() not in vocab:
+                word = assign_unk(word.strip())
+                prep.append(word)
+                continue
+
+            else:
+                prep.append(word.strip())
+
+    assert len(orig) == len(open(data_fp, 'r').readlines())
+    assert len(prep) == len(open(data_fp, 'r').readlines())
+
+    return orig, prep
+
+
 
 

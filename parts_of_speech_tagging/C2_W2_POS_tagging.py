@@ -3,6 +3,8 @@ from collections import defaultdict
 import math
 import numpy as np
 
+from parts_of_speech_tagging.utils import preprocess
+
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
 
@@ -33,6 +35,12 @@ for k, v in vocab.items():
 with open('./data/WSJ_24.pos', 'r') as fh:
     y = fh.readlines()
 
+# A sample of the test corpus.
 print(y[:10])
 
+_, prep = preprocess(vocab, "./data/test.words")
+print('The length of the preprocessed test corpus: ', len(prep))
+print('This is a sample of the test_corpus: ')
+print(prep[0:10])
 
+# Parts of speech tagging
