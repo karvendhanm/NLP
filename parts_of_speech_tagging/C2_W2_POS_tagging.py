@@ -15,3 +15,24 @@ print(voc_l[0:50])
 print('few items at the end of the vocabulary list')
 print(voc_l[-50:])
 
+# vocab: dictionary that has the index of the corresponding words in voc_l after it is sorted:
+vocab = {}
+
+for _idx, word in enumerate(sorted(voc_l)):
+    vocab[word] = _idx
+
+print('Vocabulary dictionary. key is the word, value is a unique integer')
+cnt = 0
+for k, v in vocab.items():
+    print(f'{k}:{v}')
+    cnt += 1
+    if cnt > 20:
+        break
+
+# load in the test corpus.
+with open('./data/WSJ_24.pos', 'r') as fh:
+    y = fh.readlines()
+
+print(y[:10])
+
+
