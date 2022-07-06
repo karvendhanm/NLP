@@ -6,3 +6,4 @@ twitter_sentiment_analysis/__pycache__/
 vector_space_models/__pycache__/
 parts_of_speech_tagging/__pycache__/
 autocorrect/__pycache__/
+parts_of_speech_tagging/utils_pos.py

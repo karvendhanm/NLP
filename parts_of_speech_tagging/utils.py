@@ -96,5 +96,30 @@ def preprocess(vocab, data_fp):
     return orig, prep
 
 
+def create_dictionaries(training_corpus):
+    '''
+
+    :param training_corpus:
+    :return:
+    '''
+    len_training_corpus = len(training_corpus)
+    transmission_count, emission_count, tag_count = {}, {}, {}
+    for _idx, _elem in enumerate(training_corpus):
+
+        if _elem.split():
+            word, tag1 = _elem.split()
+            tag_count[tag1] = tag_count.get(tag1, 0) + 1
+            emission_count[(tag1, word)] = emission_count.get((tag1, word), 0) + 1
+
+            if _idx == (len_training_corpus - 1):
+                break
+
+            if training_corpus[_idx + 1].split():
+                _, tag2 = training_corpus[_idx + 1].split()
+                transmission_count[(tag1, tag2)] = transmission_count.get((tag1, tag2), 0) + 1
+
+    return transmission_count, emission_count, tag_count
+
+
 
 

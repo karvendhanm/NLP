@@ -3,7 +3,7 @@ from collections import defaultdict
 import math
 import numpy as np
 
-from parts_of_speech_tagging.utils import preprocess
+from parts_of_speech_tagging.utils import preprocess, create_dictionaries
 
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
@@ -43,4 +43,32 @@ print('The length of the preprocessed test corpus: ', len(prep))
 print('This is a sample of the test_corpus: ')
 print(prep[0:10])
 
-# Parts of speech tagging
+# Parts of speech tagging.
+# build transition counts dictionary(key: (prev_tag, tag), value: number of times those tags appeared in that order),
+# emission counts dictionary(key: (tag, word), value: number of times that tag & pair show up in training set)
+# and tag counts dictionary(key: tag, value: number of times each tag appeared).
+
+# write a function that takes in training corpus and returns the 3 aforementioned dictionaries.
+
+transmission_count, emission_count, tag_count = create_dictionaries(training_corpus)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
