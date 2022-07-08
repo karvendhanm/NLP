@@ -123,7 +123,7 @@ def create_dictionaries(training_corpus, vocab, verbose=True):
         word, tag = get_word_tag(word_tag, vocab)
 
         transition_counts[(prev_tag, tag)] += 1
-        emission_counts[(word, tag)] += 1
+        emission_counts[(tag, word)] += 1
         tag_counts[tag] += 1
 
         prev_tag = tag
