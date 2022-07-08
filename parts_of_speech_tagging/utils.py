@@ -1,3 +1,4 @@
+from collections import defaultdict
 import string
 
 
@@ -96,29 +97,42 @@ def preprocess(vocab, data_fp):
     return orig, prep
 
 
-def create_dictionaries(training_corpus):
-    '''
+def create_dictionaries(training_corpus, vocab, verbose=True):
+    """
+    Input:
+        training_corpus: a corpus where each line has a word followed by its tag.
+        vocab: a dictionary where keys are words in vocabulary and value is an index
+    Output:
+        emission_counts: a dictionary where the keys are (tag, word) and the values are the counts
+        transition_counts: a dictionary where the keys are (prev_tag, tag) and the values are the counts
+        tag_counts: a dictionary where the keys are the tags and the values are the counts
+    """
 
-    :param training_corpus:
-    :return:
-    '''
-    len_training_corpus = len(training_corpus)
-    transmission_count, emission_count, tag_count = {}, {}, {}
-    for _idx, _elem in enumerate(training_corpus):
+    # initialize the dictionaries using default dict:
+    transition_counts = defaultdict(int)
+    emission_counts = defaultdict(int)
+    tag_counts = defaultdict(int)
 
-        if _elem.split():
-            word, tag1 = _elem.split()
-            tag_count[tag1] = tag_count.get(tag1, 0) + 1
-            emission_count[(tag1, word)] = emission_count.get((tag1, word), 0) + 1
+    prev_tag = "--s--"
 
-            if _idx == (len_training_corpus - 1):
-                break
+    for _idx, word_tag in enumerate(training_corpus):
 
-            if training_corpus[_idx + 1].split():
-                _, tag2 = training_corpus[_idx + 1].split()
-                transmission_count[(tag1, tag2)] = transmission_count.get((tag1, tag2), 0) + 1
+        if _idx % 50000 == 0 and verbose:
+            print(f'processing word_count = {_idx}')
 
-    return transmission_count, emission_count, tag_count
+        word, tag = get_word_tag(word_tag, vocab)
+
+        transition_counts[(prev_tag, tag)] += 1
+        emission_counts[(word, tag)] += 1
+        tag_counts[tag] += 1
+
+        prev_tag = tag
+
+    return emission_counts, transition_counts, tag_counts
+
+
+
+
 
 
 

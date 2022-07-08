@@ -1,5 +1,4 @@
 import pandas as pd
-from collections import defaultdict
 import math
 import numpy as np
 
@@ -50,7 +49,7 @@ print(prep[0:10])
 
 # write a function that takes in training corpus and returns the 3 aforementioned dictionaries.
 
-transmission_count, emission_count, tag_count = create_dictionaries(training_corpus)
+emission_counts, transition_counts, tag_counts = create_dictionaries(training_corpus, vocab)
 
 
 
