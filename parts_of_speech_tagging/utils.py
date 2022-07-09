@@ -1,4 +1,5 @@
 from collections import defaultdict
+import operator
 import string
 
 
@@ -129,6 +130,52 @@ def create_dictionaries(training_corpus, vocab, verbose=True):
         prev_tag = tag
 
     return emission_counts, transition_counts, tag_counts
+
+
+def predict_pos(prep, y, emission_counts, vocab, states):
+    '''
+        Input:
+            prep: a preprocessed version of 'y'. A list with the 'word' component of the tuples.
+            y: a corpus composed of a list of tuples where each tuple consists of (word, POS)
+            emission_counts: a dictionary where the keys are (tag,word) tuples and the value is the count
+            vocab: a dictionary where keys are words in vocabulary and value is an index
+            states: a sorted list of all possible tags for this assignment
+        Output:
+            accuracy: Number of times you classified a word correctly
+    '''
+
+    _dict = defaultdict(list)
+    for (tag, word), count in emission_counts.items():
+
+        if word in prep:
+            _dict[word].append((tag, count))
+
+    _word_high_freq_tag = {}
+    for key, val in _dict.items():
+        most_used_tag = sorted(val, key=operator.itemgetter(1), reverse=True)[0][0]
+        _word_high_freq_tag[key] = most_used_tag
+
+    cnt = 0
+    for line in y:
+        if not line.split():
+            cnt += 1
+            continue
+
+        train_word, train_tag = line.split()
+        if train_tag == _word_high_freq_tag.get(train_word, "UNKNOWN"):
+            cnt += 1
+
+    return cnt/len(prep)
+
+
+
+
+
+
+
+
+
+
 
 
 
