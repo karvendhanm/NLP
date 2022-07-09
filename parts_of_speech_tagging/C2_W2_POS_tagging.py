@@ -1,8 +1,4 @@
-import pandas as pd
-import math
-import numpy as np
-
-from parts_of_speech_tagging.utils import preprocess, create_dictionaries
+from parts_of_speech_tagging.utils import preprocess, create_dictionaries, predict_pos1, predict_pos2
 
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
@@ -48,8 +44,36 @@ print(prep[0:10])
 # and tag counts dictionary(key: tag, value: number of times each tag appeared).
 
 # write a function that takes in training corpus and returns the 3 aforementioned dictionaries.
-
 emission_counts, transition_counts, tag_counts = create_dictionaries(training_corpus, vocab)
+
+print("transition examples")
+for ex in list(transition_counts.items())[:3]:
+    print(ex)
+
+print("emission examples")
+for ex in list(emission_counts.items())[:3]:
+    print(ex)
+
+for tup, cnt in emission_counts.items():
+    if tup[1] == "back":
+        print(tup, cnt)
+
+states = sorted(tag_counts.keys())
+
+# testing:
+import time
+
+t1 = time.time()
+for _ in range(10):
+    accuracy = predict_pos1(prep, y, emission_counts, vocab, states)
+t2 = time.time()
+for _ in range(10):
+    accuracy = predict_pos1(prep, y, emission_counts, vocab, states)
+t3 = time.time()
+
+print(f"my implementation: {t2-t1}")
+print(f"coursera implementation: {t3-t2}")
+
 
 
 
