@@ -132,42 +132,110 @@ def create_dictionaries(training_corpus, vocab, verbose=True):
     return emission_counts, transition_counts, tag_counts
 
 
+# def predict_pos(prep, y, emission_counts, vocab, states):
+#     '''
+#         Input:
+#             prep: a preprocessed version of 'y'. A list with the 'word' component of the tuples.
+#             y: a corpus composed of a list of tuples where each tuple consists of (word, POS)
+#             emission_counts: a dictionary where the keys are (tag,word) tuples and the value is the count
+#             vocab: a dictionary where keys are words in vocabulary and value is an index
+#             states: a sorted list of all possible tags for this assignment
+#         Output:
+#             accuracy: Number of times you classified a word correctly
+#     '''
+#
+#     _dict = defaultdict(list)
+#     for (tag, word), count in emission_counts.items():
+#
+#         if word in prep:
+#             _dict[word].append((tag, count))
+#
+#     _word_high_freq_tag = {}
+#     for key, val in _dict.items():
+#         most_used_tag = sorted(val, key=operator.itemgetter(1), reverse=True)[0][0]
+#         _word_high_freq_tag[key] = most_used_tag
+#
+#     cnt = 0
+#     for line in y:
+#         if not line.split():
+#             cnt += 1
+#             continue
+#
+#         train_word, train_tag = line.split()
+#         if train_tag == _word_high_freq_tag.get(train_word, "UNKNOWN"):
+#             cnt += 1
+#
+#     return cnt/len(prep)
+
+
 def predict_pos(prep, y, emission_counts, vocab, states):
     '''
-        Input:
-            prep: a preprocessed version of 'y'. A list with the 'word' component of the tuples.
-            y: a corpus composed of a list of tuples where each tuple consists of (word, POS)
-            emission_counts: a dictionary where the keys are (tag,word) tuples and the value is the count
-            vocab: a dictionary where keys are words in vocabulary and value is an index
-            states: a sorted list of all possible tags for this assignment
-        Output:
-            accuracy: Number of times you classified a word correctly
+    Input:
+        prep: a preprocessed version of 'y'. A list with the 'word' component of the tuples.
+        y: a corpus composed of a list of tuples where each tuple consists of (word, POS)
+        emission_counts: a dictionary where the keys are (tag,word) tuples and the value is the count
+        vocab: a dictionary where keys are words in vocabulary and value is an index
+        states: a sorted list of all possible tags for this assignment
+    Output:
+        accuracy: Number of times you classified a word correctly
     '''
 
-    _dict = defaultdict(list)
-    for (tag, word), count in emission_counts.items():
+    # Initialize the number of correct predictions to zero
+    num_correct = 0
 
-        if word in prep:
-            _dict[word].append((tag, count))
+    # Get the (tag, word) tuples, stored as a set
+    all_words = set(emission_counts.keys())
 
-    _word_high_freq_tag = {}
-    for key, val in _dict.items():
-        most_used_tag = sorted(val, key=operator.itemgetter(1), reverse=True)[0][0]
-        _word_high_freq_tag[key] = most_used_tag
+    # Get the number of (word, POS) tuples in the corpus 'y'
+    total = len(y)
+    for word, y_tup in zip(prep, y):
 
-    cnt = 0
-    for line in y:
-        if not line.split():
-            cnt += 1
+        # Split the (word, POS) string into a list of two items
+        y_tup_l = y_tup.split()
+
+        # Verify that y_tup contain both word and POS
+        if len(y_tup_l) == 2:
+
+            # Set the true POS label for this word
+            true_label = y_tup_l[1]
+
+        else:
+            # If the y_tup didn't contain word and POS, go to next word
             continue
 
-        train_word, train_tag = line.split()
-        if train_tag == _word_high_freq_tag.get(train_word, "UNKNOWN"):
-            cnt += 1
+        count_final = 0
+        pos_final = ''
 
-    return cnt/len(prep)
+        # If the word is in the vocabulary...
+        if word in vocab:
+            for pos in states:
 
+                # define the key as the tuple containing the POS and word
+                key = (pos, word)
 
+                # check if the (pos, word) key exists in the emission_counts dictionary
+                if key in emission_counts:  # Replace None in this line with the proper condition.
+
+                    # get the emission count of the (pos,word) tuple
+                    count = emission_counts[key]
+
+                    # keep track of the POS with the largest count
+                    if count > count_final:  # Replace None in this line with the proper condition.
+
+                        # update the final count (largest count)
+                        count_final = count
+
+                        # update the final POS
+                        pos_final = pos
+
+            # If the final POS (with the largest count) matches the true POS:
+            if true_label == pos_final:  # Replace None in this line with the proper condition.
+                # Update the number of correct predictions
+                num_correct += 1
+
+    accuracy = num_correct / total
+
+    return accuracy
 
 
 
