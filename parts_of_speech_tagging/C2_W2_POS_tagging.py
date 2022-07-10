@@ -1,4 +1,7 @@
+import time
+
 from parts_of_speech_tagging.utils import preprocess, create_dictionaries, predict_pos1, predict_pos2
+from parts_of_speech_tagging.utils import create_transition_matrix
 
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
@@ -61,37 +64,20 @@ for tup, cnt in emission_counts.items():
 states = sorted(tag_counts.keys())
 
 # testing:
-import time
+# t1 = time.time()
+# for _ in range(10):
+#     accuracy = predict_pos1(prep, y, emission_counts, vocab, states)
+# t2 = time.time()
+# for _ in range(10):
+#     accuracy = predict_pos2(prep, y, emission_counts, vocab, states)
+# t3 = time.time()
+#
+# print(f"my implementation: {t2 - t1}")
+# print(f"coursera implementation: {t3 - t2}")  #Coursera's implementation is far superior, it takes ~1/60th of my time.
 
-t1 = time.time()
-for _ in range(10):
-    accuracy = predict_pos1(prep, y, emission_counts, vocab, states)
-t2 = time.time()
-for _ in range(10):
-    accuracy = predict_pos1(prep, y, emission_counts, vocab, states)
-t3 = time.time()
+# Hidden Markov models for POS
+# will build something context specific. will be implementing Hidden Markov Model(HMM) with a Viterbi decoder
 
-print(f"my implementation: {t2-t1}")
-print(f"coursera implementation: {t3-t2}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Generating matrices
+alpha = 0.001
+create_transition_matrix(alpha, tag_counts, transition_counts)

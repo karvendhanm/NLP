@@ -240,6 +240,25 @@ def predict_pos2(prep, y, emission_counts, vocab, states):
     return accuracy
 
 
+# create transition matrix:
+def create_transition_matrix(alpha, tag_counts, transition_counts):
+    '''
+    Input:
+        alpha: number used for smoothing
+        tag_counts: a dictionary mapping each tag to its respective count
+        transition_counts: a dictionary where the keys are (prev_tag, tag) and the values are the counts
+    Output:
+        A: matrix of dimension (num_tags,num_tags)
+    '''
+
+    all_tags = sorted(tag_counts.keys())
+
+
+
+    print('this is just for debugging')
+
+
+
 
 
 
