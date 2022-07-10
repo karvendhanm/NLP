@@ -1,4 +1,5 @@
 from collections import defaultdict
+import numpy as np
 import operator
 import string
 
@@ -49,6 +50,7 @@ def assign_unk(word):
 
     # If none of the previous criteria is met, return plain unknown
     return "--unk--"
+
 
 def get_word_tag(line, vocab):
     if not line.split():
@@ -166,7 +168,7 @@ def predict_pos1(prep, y, emission_counts, vocab, states):
         if train_tag == _word_high_freq_tag.get(train_word, "UNKNOWN"):
             cnt += 1
 
-    return cnt/len(prep)
+    return cnt / len(prep)
 
 
 # Coursera implementation
@@ -253,23 +255,27 @@ def create_transition_matrix(alpha, tag_counts, transition_counts):
 
     all_tags = sorted(tag_counts.keys())
 
+    # number of POS tags
+    num_tags = len(all_tags)
 
+    # Initialize the transition matrix
+    A = np.zeros((num_tags, num_tags))
 
-    print('this is just for debugging')
+    # Get the unique transition tuples
+    trans_keys = set(transition_counts.keys())
 
+    for i in range(num_tags):
 
+        for j in range(num_tags):
 
+            count = 0
 
+            key = (all_tags[i], all_tags[j])
 
+            if key in transition_counts:
+                count = transition_counts[key]
 
+            count_prev_tag = tag_counts.get(all_tags[i])
+            A[i, j] = (count + alpha)/(count_prev_tag + (num_tags * alpha))
 
-
-
-
-
-
-
-
-
-
-
+    return A

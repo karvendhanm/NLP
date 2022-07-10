@@ -1,3 +1,4 @@
+import pandas as pd
 import time
 
 from parts_of_speech_tagging.utils import preprocess, create_dictionaries, predict_pos1, predict_pos2
@@ -80,4 +81,11 @@ states = sorted(tag_counts.keys())
 
 # Generating matrices
 alpha = 0.001
-create_transition_matrix(alpha, tag_counts, transition_counts)
+A = create_transition_matrix(alpha, tag_counts, transition_counts)
+# Testing the function
+print(f"A at row 0, col 0: {A[0,0]:.9f}")
+print(f"A at row 3, col 1: {A[3,1]:.4f}")
+
+print("View a subset of transition matrix A")
+A_sub = pd.DataFrame(A[30:35,30:35], index=states[30:35], columns = states[30:35] )
+print(A_sub)
