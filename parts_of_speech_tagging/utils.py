@@ -1,4 +1,5 @@
 from collections import defaultdict
+import math
 import numpy as np
 import operator
 import string
@@ -320,5 +321,51 @@ def create_emission_matrix(alpha, tag_counts, emission_counts, vocab):
             B[i, j] = (count + alpha)/(count_tag + (num_words * alpha))
 
     return B
+
+# Initializing best_probs and best_paths matrices for viterbi algorithm
+def initialize(states, tag_counts, A, B, corpus, vocab):
+    '''
+    Input:
+        states: a list of all possible parts-of-speech
+        tag_counts: a dictionary mapping each tag to its respective count
+        A: Transition Matrix of dimension (num_tags, num_tags)
+        B: Emission Matrix of dimension (num_tags, len(vocab))
+        corpus: a sequence of words whose POS is to be identified in a list
+        vocab: a dictionary where keys are words in vocabulary and value is an index
+    Output:
+        best_probs: matrix of dimension (num_tags, len(corpus)) of floats
+        best_paths: matrix of dimension (num_tags, len(corpus)) of integers
+    '''
+
+    num_tags = len(tag_counts)
+
+    best_probs = np.zeros((num_tags, len(corpus)))
+
+    best_paths = np.zeros((num_tags, len(corpus)), dtype='int')
+
+    # define the start token
+    s_idx = states.index('--s--')
+
+    # Go through each of the POS tags
+    for i in range(num_tags):  # Replace None in this line with the proper range.
+
+        # Handle the special case when the transition from start token to POS tag i is zero
+        if A[s_idx, i] == 0:  # Replace None in this line with the proper condition. # POS by word
+
+            # Initialize best_probs at POS tag 'i', column 0, to negative infinity
+            best_probs[i, 0] = float("-inf")
+
+        # For all other cases when transition from start token to POS tag i is non-zero:
+        else:
+
+            # Initialize best_probs at POS tag 'i', column 0
+            # Check the formula in the instructions above
+            best_probs[i, 0] = math.log(A[s_idx, i]) + math.log(B[i, vocab[corpus[0]]])
+
+    return best_probs, best_paths
+
+
+
+
 
 

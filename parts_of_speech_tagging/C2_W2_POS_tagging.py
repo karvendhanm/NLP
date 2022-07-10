@@ -114,4 +114,4 @@ rows = [states.index(a) for a in rvals]
 B_sub = pd.DataFrame(B[np.ix_(rows, cols)], index=rvals, columns=cidx)
 print(B_sub)
 
-
+# Viterbi algorithm and dynamic programming:
