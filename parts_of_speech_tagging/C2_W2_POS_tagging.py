@@ -3,7 +3,8 @@ import pandas as pd
 import time
 
 from parts_of_speech_tagging.utils import preprocess, create_dictionaries, predict_pos1, predict_pos2
-from parts_of_speech_tagging.utils import create_transition_matrix, create_emission_matrix
+from parts_of_speech_tagging.utils import create_transition_matrix, create_emission_matrix, initialize
+from parts_of_speech_tagging.utils import viterbi_forward
 
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
@@ -115,3 +116,13 @@ B_sub = pd.DataFrame(B[np.ix_(rows, cols)], index=rvals, columns=cidx)
 print(B_sub)
 
 # Viterbi algorithm and dynamic programming:
+best_probs, best_paths = initialize(states, tag_counts, A, B, prep, vocab)
+# Test the function
+print(f"best_probs[0,0]: {best_probs[0,0]:.4f}")
+print(f"best_paths[2,3]: {best_paths[2,3]:.4f}")
+
+# viterbi forward:
+best_probs, best_paths = viterbi_forward(A, B, prep, best_probs, best_paths, vocab)
+print(f"best_probs[0,1]: {best_probs[0,1]:.4f}")
+print(f"best_probs[0,4]: {best_probs[0,4]:.4f}")
+
