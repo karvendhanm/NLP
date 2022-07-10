@@ -276,6 +276,48 @@ def create_transition_matrix(alpha, tag_counts, transition_counts):
                 count = transition_counts[key]
 
             count_prev_tag = tag_counts.get(all_tags[i])
-            A[i, j] = (count + alpha)/(count_prev_tag + (num_tags * alpha))
+            A[i, j] = (count + alpha) / (count_prev_tag + (num_tags * alpha))
 
     return A
+
+
+def create_emission_matrix(alpha, tag_counts, emission_counts, vocab):
+    '''
+        Input:
+            alpha: tuning parameter used in smoothing
+            tag_counts: a dictionary mapping each tag to its respective count
+            emission_counts: a dictionary where the keys are (tag, word) and the values are the counts
+            vocab: a dictionary where keys are words in vocabulary and value is an index.
+                   within the function it'll be treated as a list
+        Output:
+            B: a matrix of dimension (num_tags, len(vocab))
+    '''
+
+    # list of all POS tags
+    all_tags = sorted(tag_counts.keys())
+
+    # number of POS tags
+    num_tags = len(all_tags)
+
+    # total number of unique words in the vocabulary
+    num_words = len(vocab)
+
+    # Initializing emission matrix B
+    B = np.zeros((num_tags, num_words))
+
+    count = 0
+    for i in range(num_tags):
+        for j in range(num_words):
+
+            key = (all_tags[i], vocab[j])
+
+            if key in emission_counts:
+                count = emission_counts[key]
+
+            count_tag = tag_counts[all_tags[i]]
+
+            B[i. j] = (count + alpha)/(count_tag + (num_words * alpha))
+
+    return B
+
+

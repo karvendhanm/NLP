@@ -2,7 +2,7 @@ import pandas as pd
 import time
 
 from parts_of_speech_tagging.utils import preprocess, create_dictionaries, predict_pos1, predict_pos2
-from parts_of_speech_tagging.utils import create_transition_matrix
+from parts_of_speech_tagging.utils import create_transition_matrix, create_emission_matrix
 
 with open('./data/WSJ_02-21.pos', 'r') as fh:
     training_corpus = fh.readlines()
@@ -89,3 +89,7 @@ print(f"A at row 3, col 1: {A[3,1]:.4f}")
 print("View a subset of transition matrix A")
 A_sub = pd.DataFrame(A[30:35,30:35], index=states[30:35], columns = states[30:35] )
 print(A_sub)
+
+# create matrix 'B' emission probability matrix
+alpha = 0.001
+B = create_emission_matrix(alpha, tag_counts, emission_counts, list(vocab))
