@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import time
 
@@ -83,13 +84,34 @@ states = sorted(tag_counts.keys())
 alpha = 0.001
 A = create_transition_matrix(alpha, tag_counts, transition_counts)
 # Testing the function
-print(f"A at row 0, col 0: {A[0,0]:.9f}")
-print(f"A at row 3, col 1: {A[3,1]:.4f}")
+print(f"A at row 0, col 0: {A[0, 0]:.9f}")
+print(f"A at row 3, col 1: {A[3, 1]:.4f}")
 
 print("View a subset of transition matrix A")
-A_sub = pd.DataFrame(A[30:35,30:35], index=states[30:35], columns = states[30:35] )
+A_sub = pd.DataFrame(A[30:35, 30:35], index=states[30:35], columns=states[30:35])
 print(A_sub)
 
 # create matrix 'B' emission probability matrix
 alpha = 0.001
 B = create_emission_matrix(alpha, tag_counts, emission_counts, list(vocab))
+
+print(f"View Matrix position at row 0, column 0: {B[0, 0]:.9f}")
+print(f"View Matrix position at row 3, column 1: {B[3, 1]:.9f}")
+
+# Try viewing emissions for a few words in a sample dataframe
+cidx = ['725', 'adroitly', 'engineers', 'promoted', 'synergy']
+
+# Get the integer ID for each word
+cols = [vocab[a] for a in cidx]
+
+# Choose POS tags to show in a sample dataframe
+rvals = ['CD', 'NN', 'NNS', 'VB', 'RB', 'RP']
+
+# For each POS tag, get the row number from the 'states' list
+rows = [states.index(a) for a in rvals]
+
+# Get the emissions for the sample of words, and the sample of POS tags
+B_sub = pd.DataFrame(B[np.ix_(rows, cols)], index=rvals, columns=cidx)
+print(B_sub)
+
+

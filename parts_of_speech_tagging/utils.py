@@ -305,9 +305,10 @@ def create_emission_matrix(alpha, tag_counts, emission_counts, vocab):
     # Initializing emission matrix B
     B = np.zeros((num_tags, num_words))
 
-    count = 0
     for i in range(num_tags):
         for j in range(num_words):
+
+            count = 0
 
             key = (all_tags[i], vocab[j])
 
@@ -316,7 +317,7 @@ def create_emission_matrix(alpha, tag_counts, emission_counts, vocab):
 
             count_tag = tag_counts[all_tags[i]]
 
-            B[i. j] = (count + alpha)/(count_tag + (num_words * alpha))
+            B[i, j] = (count + alpha)/(count_tag + (num_words * alpha))
 
     return B
 
