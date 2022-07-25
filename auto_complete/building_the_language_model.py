@@ -65,8 +65,9 @@ def single_pass_trigram_count_matrix(corpus, n_grams=3):
 
 
 corpus = ['i', 'am', 'happy', 'because', 'i', 'am', 'learning', '.']
-bigrams, vocabulary, count_matrix  = single_pass_trigram_count_matrix(corpus)
+bigrams, vocabulary, count_matrix = single_pass_trigram_count_matrix(corpus)
 print(count_matrix)
 
 # probability matrix
-
+row_sums = count_matrix.sum(axis=1)
+prob_matrix = count_matrix.div(row_sums, axis=0)
