@@ -71,3 +71,26 @@ print(count_matrix)
 # probability matrix
 row_sums = count_matrix.sum(axis=1)
 prob_matrix = count_matrix.div(row_sums, axis=0)
+print(prob_matrix)
+
+trigram = ('i', 'am', 'happy')
+bigram = trigram[:-1]
+print(f'bigram: {bigram}')
+
+# find the last word of the trigram
+word = trigram[-1]
+print(f'word: {word}')
+
+trigram_probability = prob_matrix[word][bigram]
+print(f'trigram_probability: {trigram_probability}')
+
+# lists all words in vocabulary starting with a given prefix
+vocabulary = ['i', 'am', 'happy', 'because', 'learning', '.', 'have', 'you', 'seen','it', '?']
+starts_with = 'ha'
+
+print(f'words in vocabulary starting with prefix: {starts_with}\n')
+for word in vocabulary:
+    if word.startswith(starts_with):
+        print(word)
+
+# Language model evaluation
