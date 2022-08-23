@@ -25,8 +25,18 @@ word = 'because'
 n_gram = prefix + (word,)
 print(n_gram)
 
+# building a count matrix
 corpus = ['I', 'am', 'happy', 'because', 'I', 'am', 'learning', '.']
 bigram, vocabulary, count_matrix = single_pass_trigram_count_matrix(corpus)
+
+# Buildling a probability matrix
+row_sums = count_matrix.sum(axis=1)
+# divide each row by its sum
+prob_matrix = count_matrix.div(row_sums, axis=0)
+
+
+
+
 
 
 

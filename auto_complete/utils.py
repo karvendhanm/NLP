@@ -36,7 +36,7 @@ def single_pass_trigram_count_matrix(corpus):
         count_matrix_dict[bigram, last_word] += 1
 
     # convert the count matrix to np.array to fill in the blanks
-    count_matrix = np.zeros(len(bigrams), len(vocabulary))
+    count_matrix = np.zeros((len(bigrams), len(vocabulary)))
     for trigram_key, trigram_count in count_matrix_dict.items():
         count_matrix[bigrams.index(trigram_key[0]), vocabulary.index(trigram_key[1])] = trigram_count
 
